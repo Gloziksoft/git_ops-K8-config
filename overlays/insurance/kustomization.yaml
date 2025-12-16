@@ -11,6 +11,11 @@ configMapGenerator:
 - name: metallb-config
   files:
   - metallb-pool.yaml
+  
+images:
+  - name: <Docker_Username>/insuranceapp # Nahradený placeholder
+    newName: mendhak/http-https-echo    # Použijeme verejný testovací image
+    newTag: latest
 
 # Aplikácia zmien pre lokálne prostredie
 patches:
