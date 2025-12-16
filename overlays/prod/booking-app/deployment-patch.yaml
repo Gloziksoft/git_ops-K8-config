@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking-app-deployment
+spec:
+  template:
+    metadata:
+      annotations:
+        gitops-redeploy: "2025-12-16T15:00:00"
+

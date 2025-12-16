@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 1. Base: Odkaz na základné manifesty
+resources:
+  - ../../../base/insurance-app
+
+# 2. Images: Prepísanie Image kontajnera pre produkciu
+images:
+  - name: placeholder/insuranceapp       # musí zodpovedať názvu kontajnera v deployment.yaml
+    newName: your-private-repo/insuranceapp
+    newTag: v1.0.0-prod
+
+# 3. Patches: Zmeny existujúcich manifestov
+patches:
+  - path: service-patch.yaml
+    target:
+      kind: Service
+      name: insurance-app-service     # presný názov z base/service.yaml
+
+  - path: deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: insurance-app-deployment # presný názov z base/deployment.yaml
+

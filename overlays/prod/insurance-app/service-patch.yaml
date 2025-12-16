@@ -1,0 +1,9 @@
+# FILE: overlays/prod/insurance-app/service-patch.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: insurance-app-service
+spec:
+  # Prepíše sa hodnota 'type' z 'ClusterIP' na 'LoadBalancer'
+  type: LoadBalancer
