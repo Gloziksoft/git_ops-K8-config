@@ -1,1 +1,0 @@
-# git_ops-K8-config

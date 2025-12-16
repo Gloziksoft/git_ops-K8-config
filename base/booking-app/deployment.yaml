@@ -1,0 +1,54 @@
+# git_ops-K8-config/base/booking-app/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking-app-deployment
+  labels:
+    app: booking-app
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: booking-app
+  template:
+    metadata:
+      labels:
+        app: booking-app
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: booking-app
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: booking-app-container
+        image: <Docker_Username>/bookingeasyapp:latest 
+        ports:
+        - containerPort: 8081 # Port 8081
+        
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "192Mi"
+            cpu: "500m"
+            
+        env:
+        # --- ENV pre PostgreSQL Secret (postgresql-secret) ---
+        - name: DATABASE_HOST
+          value: postgresql-service
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-secret
+              key: postgres-user
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-secret
+              key: postgres-password
+        - name: DATABASE_NAME
+          value: booking_db

@@ -1,0 +1,14 @@
+# git_ops-K8-config/base/booking-app/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - db-service.yaml
+  - deployment.yaml
+  - service.yaml
+  - postgresql-statefulset.yaml
+  - postgresql-secret.yaml
+
+images:
+  - name: <Docker_Username>/bookingeasyapp
+    newTag: latest

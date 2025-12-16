@@ -1,0 +1,68 @@
+# git_ops-K8-config/base/insurance-app/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: insurance-app-deployment
+  labels:
+    app: insurance-app
+spec:
+  replicas: 2 # Pripravené pre HA na dvoch Node (VM)
+  selector:
+    matchLabels:
+      app: insurance-app
+  template:
+    metadata:
+      labels:
+        app: insurance-app
+    spec:
+      affinity: # Pravidlo Antiaffinity pre rozloženie medzi VM
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: insurance-app
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: insurance-app-container
+        image: <Docker_Username>/insuranceapp:latest # Použije sa z kustomization.yaml
+        ports:
+        - containerPort: 8080
+        
+        # --- Kľúčové pre stabilitu na VM s 1GB RAM ---
+        resources:
+          requests:
+            memory: "64Mi" # Minimálna požadovaná pamäť
+            cpu: "100m"
+          limits:
+            memory: "192Mi" # Maximálna povolená pamäť
+            cpu: "500m"
+        # ---------------------------------------------
+        
+        env:
+        # --- ENV pre MariaDB Secret (mariadb-secret) ---
+        - name: DATABASE_HOST
+          value: mariadb-service
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-user
+        - name: DATABASE_PASSWORD
+          valueFrom: # Doplňujeme heslo pre pripojenie k DB
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-password
+        - name: DATABASE_NAME
+          value: insurance_db
+          
+        # --- ENV pre Mail Secret (mail-secret) ---
+        - name: SMTP_HOST
+          valueFrom:
+            secretKeyRef:
+              name: mail-secret
+              key: smtp-host
+        - name: SMTP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mail-secret
+              key: smtp-password

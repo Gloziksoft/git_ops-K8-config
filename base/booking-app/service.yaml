@@ -1,0 +1,15 @@
+# git_ops-K8-config/base/booking-app/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: booking-app-service
+  labels:
+    app: booking-app
+spec:
+  type: ClusterIP 
+  selector:
+    app: booking-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081

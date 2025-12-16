@@ -1,0 +1,14 @@
+# git_ops-K8-config/base/insurance-app/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: insurance-app-service
+spec:
+  # Typ service sa bude líšiť v overlays
+  type: ClusterIP 
+  selector:
+    app: insurance-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
