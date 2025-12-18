@@ -7,6 +7,9 @@ kubectl get nodes
 
 kubectl get ns
 
+➡️ Zobrazí všetky ip
+
+kubectl get svc
 
 ➡️ Zobrazí všetky namespace (logické oddelenie aplikácií)
 
