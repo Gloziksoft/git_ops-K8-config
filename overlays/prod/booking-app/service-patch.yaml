@@ -4,6 +4,4 @@ metadata:
   name: booking-app-service
 spec:
   type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 8081 # Alebo 8080 podľa tvojej appky
+
