@@ -5,7 +5,7 @@ metadata:
   labels:
     app: insurance-app
 spec:
-  replicas: 1 # Zmenené na 1 pre tvoj lokálny uzol (aby nehlásil FailedScheduling)
+  replicas: 1
   selector:
     matchLabels:
       app: insurance-app
