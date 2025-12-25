@@ -14,11 +14,11 @@ spec:
       labels:
         app: insurance-app
     spec:
-      # Pridané: Povolenie na sťahovanie z GitHub Container Registry
+      # Povolenie na sťahovanie z tvojho GitHub Container Registry
       imagePullSecrets:
         - name: ghcr-login-secret
       
-      # Affinity zmenené na "preferred", aby to na jednom uzle neblokovalo štart
+      # Affinity nastavené tak, aby preferovalo rôzne uzly, ale neblokovalo štart na jednom
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -44,27 +44,37 @@ spec:
             cpu: "500m"
         
         env:
-        - name: DATABASE_HOST
-          value: mariadb-service
-        - name: DATABASE_USER
+        # --- DATABÁZA ---
+        # Spring Boot automaticky použije túto URL na pripojenie k MariaDB
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mariadb://mariadb-service:3306/insurance_db
+        
+        - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
             secretKeyRef:
               name: mariadb-secret
               key: mariadb-user
-        - name: DATABASE_PASSWORD
+        
+        - name: SPRING_DATASOURCE_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mariadb-secret
               key: mariadb-password
-        - name: DATABASE_NAME
-          value: insurance_db
-        - name: SMTP_HOST
+
+        # --- EMAIL (SMTP) ---
+        - name: SPRING_MAIL_HOST
           valueFrom:
             secretKeyRef:
               name: mail-secret
               key: smtp-host
-        - name: SMTP_PASSWORD
+              
+        - name: SPRING_MAIL_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mail-secret
               key: smtp-password
+
+        # --- DOPLNKOVÉ NASTAVENIA ---
+        # Ak aplikácia pri štarte hovorí, že nemá aktívny profil, toto ho nastaví na "default" alebo "prod"
+        - name: SPRING_PROFILES_ACTIVE
+          value: default
