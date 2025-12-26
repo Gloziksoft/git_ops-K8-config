@@ -86,4 +86,4 @@ spec:
 
         # --- DOPLNKOVÉ NASTAVENIA ---
         - name: SPRING_PROFILES_ACTIVE
-          value: default
+          value: prod
