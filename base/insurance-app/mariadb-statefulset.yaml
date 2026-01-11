@@ -23,8 +23,7 @@ spec:
     spec:
       containers:
         - name: mariadb-container
-          # ✅ TVOJ DB IMAGE S init.sql
-          image: ghcr.io/gloziksoft/insurance-db:prod
+          image: mariadb:10.11
 
           ports:
             - containerPort: 3306
