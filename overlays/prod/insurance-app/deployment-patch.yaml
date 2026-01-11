@@ -4,10 +4,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: insurance-app-deployment
-  # Anotácie špecifické pre produkciu
   annotations:
-    argocd.argoproj.io/sync-wave: "1" # Aplikovať ako prvý (pred databázou)
-    # Ďalšie anotácie: monitoring.prometheus/scrape: "true"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
-  # Príklad: zmena počtu replík, ak by sa líšil od Base
-  replicas: 1 # Zvýšenie replík pre produkciu (z 2 v Base)
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: insurance-app-container
+          env:
+            - name: SERVER_FORWARD_HEADERS_STRATEGY
+              value: framework
