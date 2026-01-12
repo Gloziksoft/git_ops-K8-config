@@ -2,20 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: booking-app-deployment
+  namespace: booking        # ⬅️ odporúčané (rovnako ako insurance)
   labels:
     app: booking-app
+
 spec:
-  replicas: 1   # ⬅️ K3s / 1-node cluster
+  replicas: 1               # ⬅️ k3s / 1-node cluster
+
   selector:
     matchLabels:
       app: booking-app
+
   template:
     metadata:
       labels:
         app: booking-app
+
     spec:
       imagePullSecrets:
         - name: ghcr-login-secret
+
+      terminationGracePeriodSeconds: 30
 
       initContainers:
         - name: wait-for-postgres
@@ -32,22 +39,28 @@ spec:
       containers:
         - name: booking-app-container
           image: ghcr.io/gloziksoft/booking-app:prod
+          imagePullPolicy: IfNotPresent
+
           ports:
             - containerPort: 8080
+              name: http
 
           env:
             - name: SPRING_DATASOURCE_URL
               value: jdbc:postgresql://postgresql-service:5432/booking_db
+
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: postgresql-secret
                   key: postgresql-user
+
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgresql-secret
                   key: postgresql-password
+
             - name: SPRING_PROFILES_ACTIVE
               value: prod
 
@@ -59,12 +72,17 @@ spec:
               memory: "512Mi"
               cpu: "500m"
 
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 10
+            failureThreshold: 3
 
           livenessProbe:
             httpGet:
@@ -72,4 +90,4 @@ spec:
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 10
-
+            failureThreshold: 3

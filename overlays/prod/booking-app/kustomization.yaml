@@ -4,11 +4,6 @@ kind: Kustomization
 resources:
   - ../../../base/booking-app
 
-images:
-  - name: bookingapp           # Musí sedieť s 'image:' v base/deployment.yaml
-    newName: ghcr.io/gloziksoft/booking-app # Tvoj skutočný GHCR image
-    newTag: latest
-
 patches:
   - path: service-patch.yaml
     target:
@@ -18,4 +13,4 @@ patches:
   - path: deployment-patch.yaml
     target:
       kind: Deployment
-      name: booking-app-deployment # Musí presne sedieť s názvom v base!
+      name: booking-app-deployment
