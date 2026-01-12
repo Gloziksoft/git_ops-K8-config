@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: booking-app-deployment
-  namespace: booking        # ⬅️ odporúčané (rovnako ako insurance)
+  namespace: booking-app       # ⬅️ odporúčané (rovnako ako insurance)
   labels:
     app: booking-app
 
