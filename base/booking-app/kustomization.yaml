@@ -9,6 +9,5 @@ resources:
   - deployment.yaml
   - service.yaml
   - db-service.yaml
-  - ingress.yaml
   - postgresql-statefulset.yaml
   - secrets/postgresql-secret.yaml
