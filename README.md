@@ -1,4 +1,4 @@
-# git_ops-vm-prod-config
+# git_ops-k3s-config
 
 ## Purpose
 This repository contains **production infrastructure configuration**
